@@ -55,6 +55,7 @@ protected slots:
 
 protected:
   QSGNode* updatePaintNode(QSGNode* old, UpdatePaintNodeData *);
+
 private:
   int m_frameRate;
   bool m_run;
@@ -66,7 +67,7 @@ private:
   OpenCVfaceDetectAction *f;
 
 private:
-  IplImage* doActions(IplImage *img);
+  cv::Mat* doActions(cv::Mat *img);
   QImage::Format format(int depth, int nChannels);
 };
 

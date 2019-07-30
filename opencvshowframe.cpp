@@ -136,17 +136,19 @@ QSGNode *OpenCVshowFrame::updatePaintNode(QSGNode *old, QQuickItem::UpdatePaintN
       texture = new QSGSimpleTextureNode();
     }
   QImage img;
-  IplImage *iplImage = nullptr;
-  IplImage *out = nullptr;
+  cv::Mat *image = nullptr;
+  cv::Mat *out = nullptr;
   if(m_capture)
     {
-      iplImage = static_cast<OpenCVcapture*>(m_capture)->getFrame();
+      image = static_cast<OpenCVcapture*>(m_capture)->getFrame();
     }
-  if(iplImage != nullptr)
+  if(image != nullptr)
     {
-      out = doActions(iplImage);
-      uchar *imgData = (uchar*)out->imageData;
-      img = QImage(imgData, out->width, out->height, QImage::Format_RGB888);
+      out = doActions(image);
+      const uchar* imgData = (const uchar*)out->data;
+//      const uchar* imgData = (const uchar*)image->data;
+      img = QImage(imgData, out->cols, out->rows, QImage::Format_RGB888);
+//      img = QImage(imgData, image->cols, image->rows, QImage::Format_RGB888);
     }
   else {
       img = QImage(boundingRect().size().toSize(), QImage::Format_RGB888);
@@ -164,22 +166,24 @@ QSGNode *OpenCVshowFrame::updatePaintNode(QSGNode *old, QQuickItem::UpdatePaintN
     }
   if(out)
     {
-      cvReleaseImage(&out);
+      out->release();
+      delete out;
+      out = nullptr;
     }
   return texture;
 }
 
-IplImage *OpenCVshowFrame::doActions(IplImage *img)
+cv::Mat *OpenCVshowFrame::doActions(cv::Mat *img)
 {
-  IplImage *t = img;
+  cv::Mat *t = img;
   if(!m_actions.empty())
     {
-      QList<IplImage*> list;
+      QList<cv::Mat*> list;
       for(auto ite = m_actions.begin(); ite != m_actions.end(); ++ite)
         {
           OpenCVaction *act = static_cast<OpenCVaction*>(*ite);
-          IplImage *out;
-          act->action(t, out);
+          cv::Mat *out;
+          act->action(*t, out);
           t = out;
           list.push_back(out);
         }
@@ -187,7 +191,8 @@ IplImage *OpenCVshowFrame::doActions(IplImage *img)
         {
           if((*ite) != t)
             {
-              cvReleaseImage(&(*ite));
+              (*ite)->release();
+//              cvReleaseImage(&(*ite));
             }
         }
     }

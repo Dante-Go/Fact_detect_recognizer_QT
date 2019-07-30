@@ -3,21 +3,23 @@
 OpenCVcamera::OpenCVcamera(QObject *parent) : OpenCVcapture(parent),
   m_cameraId(0),
   m_openedCameraId(-1),
-  m_iplImage(NULL),
-  m_cvCapture(NULL)
+  m_image(nullptr),
+  m_cvCapture(nullptr)
 {
 
 }
 
 OpenCVcamera::~OpenCVcamera()
 {
-  if(m_cvCapture != NULL)
+  if(m_cvCapture != nullptr)
     {
-      cvReleaseCapture(&m_cvCapture);
-      m_cvCapture = NULL;
+      m_cvCapture->release();
+      delete m_cvCapture;
+      m_cvCapture = nullptr;
     }
 
-  m_iplImage = NULL;
+  delete m_image;
+  m_image = nullptr;
 }
 
 int OpenCVcamera::cameraId() const
@@ -35,38 +37,48 @@ void OpenCVcamera::setRun(bool r)
   m_run = r;
   if(m_run)
     {
-      if(m_cvCapture == NULL)
+      if(m_cvCapture == nullptr)
         {
-          m_cvCapture = cvCreateCameraCapture(m_cameraId);
+          m_cvCapture = new cv::VideoCapture(m_cameraId);
           m_openedCameraId = m_cameraId;
         }
       else if (m_cameraId != m_openedCameraId) {
-          cvReleaseCapture(&m_cvCapture);
-          m_cvCapture = NULL;
-          m_cvCapture = cvCreateCameraCapture(m_cameraId);
+          m_cvCapture->release();
+          delete m_cvCapture;
+          m_cvCapture = nullptr;
+          m_cvCapture = new cv::VideoCapture(m_cameraId);
           m_openedCameraId = m_cameraId;
         }
     }
   else {
       if(m_cvCapture)
         {
-          cvReleaseCapture(&m_cvCapture);
-          m_cvCapture = NULL;
+          m_cvCapture->release();
+          delete m_cvCapture;
+          m_cvCapture = nullptr;
           m_openedCameraId = -1;
         }
     }
 }
 
-IplImage *OpenCVcamera::getFrame()
+cv::Mat *OpenCVcamera::getFrame()
 {
   if(m_cvCapture)
     {
-      m_iplImage = cvQueryFrame(m_cvCapture);
+      if(m_cvCapture->isOpened())
+        {
+          m_image = new cv::Mat();
+          m_cvCapture->read(*m_image);
+        }
+      else {
+          m_image = nullptr;
+        }
     }
   else {
-      m_iplImage = NULL;
+      delete m_image;
+      m_image = nullptr;
     }
-  return m_iplImage;
+  return m_image;
 }
 
 

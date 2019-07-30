@@ -5,6 +5,8 @@
 //#include "qimageviewer.h"
 //#include "videofilter.h"
 
+#include "typedef.h"
+
 #include "opencvcamera.h"
 #include "opencvshowframe.h"
 
@@ -14,6 +16,10 @@ int main(int argc, char *argv[])
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
   QGuiApplication app(argc, argv);
+
+  qRegisterMetaType<Mats>("Mats");
+  qRegisterMetaType<cv::Mat>("cv::Mat");
+  qRegisterMetaType<Ints>("Ints");
 
 //  qmlRegisterType<QImageProcessor>("com.gtland.plugin", 1, 0, "ImageProcessor");
 //  qmlRegisterType<QImageViewer>("com.gtland.plugin", 1, 0, "ImageViewer");

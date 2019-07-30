@@ -10,7 +10,7 @@ class OpenCVcommonAction : public OpenCVaction
 public:
   OpenCVcommonAction();
   ~OpenCVcommonAction();
-  void action(IplImage *imgin, IplImage *&imgout);
+  void action(cv::Mat &imgin, cv::Mat *&imgout);
 };
 
 #endif // OPENCVCOMMONACTION_H

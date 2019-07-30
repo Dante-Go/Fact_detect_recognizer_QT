@@ -10,7 +10,7 @@ class OpenCVaction : public QObject
 public:
   explicit OpenCVaction(QObject *parent = nullptr);
   virtual ~OpenCVaction();
-  virtual void action(IplImage *imgin, IplImage *&imgout) = 0;
+  virtual void action(cv::Mat &imgin, cv::Mat *&imgout) = 0;
 signals:
 
 public slots:

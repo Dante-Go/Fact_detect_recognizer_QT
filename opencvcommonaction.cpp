@@ -10,9 +10,8 @@ OpenCVcommonAction::~OpenCVcommonAction()
 
 }
 
-void OpenCVcommonAction::action(IplImage *imgin, IplImage *&imgout)
+void OpenCVcommonAction::action(cv::Mat &imgin, cv::Mat *&imgout)
 {
-  imgout = cvCreateImage(cvGetSize(imgin), imgin->depth, imgin->nChannels);
-  cvCvtColor(imgin, imgout, CV_BGR2RGB);
-
+  imgout = new cv::Mat(imgin);
+  cv::cvtColor(imgin, *imgout, CV_BGR2RGB);
 }

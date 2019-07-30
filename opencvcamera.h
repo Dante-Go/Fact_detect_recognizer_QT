@@ -18,7 +18,7 @@ public:
 
   virtual void setRun(bool r);
 
-  IplImage* getFrame();
+  cv::Mat *getFrame();
 
 signals:
   void cameraIdChanged();
@@ -29,8 +29,8 @@ public slots:
 private:
   int m_cameraId;
   int m_openedCameraId;
-  IplImage *m_iplImage;
-  CvCapture *m_cvCapture;
+  cv::Mat *m_image;
+  cv::VideoCapture *m_cvCapture;
 };
 
 #endif // OPENCVCAMERA_H

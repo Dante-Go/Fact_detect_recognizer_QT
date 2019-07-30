@@ -15,7 +15,7 @@ public:
   bool run() const;
   virtual void setRun(bool r);
 
-  virtual IplImage *getFrame() = 0;
+  virtual cv::Mat *getFrame() = 0;
 
 signals:
   void runChanged();

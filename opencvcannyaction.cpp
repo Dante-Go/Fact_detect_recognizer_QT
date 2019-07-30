@@ -10,14 +10,14 @@ OpenCVcannyAction::~OpenCVcannyAction()
 
 }
 
-void OpenCVcannyAction::action(IplImage *imgin, IplImage *&imgout)
+void OpenCVcannyAction::action(cv::Mat &imgin, cv::Mat *&imgout)
 {
-  IplImage* pIplImageCanny = cvCreateImage(cvGetSize(imgin), imgin->depth, 1);
-  cvCvtColor(imgin, pIplImageCanny, CV_RGB2GRAY);
-  IplImage *imgCannyout = cvCreateImage(cvGetSize(imgin), imgin->depth, 1);
-  cvCanny(pIplImageCanny, imgCannyout, 15, 145, 3);
-  cvReleaseImage(&pIplImageCanny);
-  imgout = cvCreateImage(cvGetSize(imgin), imgin->depth, 3);
+  cv::Mat* pImageCanny = new cv::Mat(imgin);
+  cv::cvtColor(imgin, *pImageCanny, CV_RGB2GRAY);
+  cv::Mat* imgCannyout = new cv::Mat(imgin.size(), CV_8UC1);
+  cvCanny(pImageCanny, imgCannyout, 15, 145, 3);
+  pImageCanny->release();
+  imgout = new cv::Mat(imgin.size(), CV_8UC3);
   cvCvtColor(imgCannyout, imgout, CV_GRAY2RGB); // QT not support Format_Indexed8.
-  cvReleaseImage(&imgCannyout);
+  imgCannyout->release();
 }

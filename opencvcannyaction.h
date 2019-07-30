@@ -10,7 +10,7 @@ public:
   explicit OpenCVcannyAction(QObject *parent = nullptr);
   ~OpenCVcannyAction();
 
-  void action(IplImage *imgin, IplImage *&imgout);
+  void action(cv::Mat &imgin, cv::Mat *&imgout);
 
 signals:
 
