@@ -9,7 +9,7 @@ import com.gtland.plugin 1.0
 ApplicationWindow {
     visible: true
     width: 640
-    height: 480
+    height: 600
     title: qsTr("CvQml")
 
     menuBar: MenuBar {
@@ -40,13 +40,15 @@ ApplicationWindow {
         id: opencvCamera;
         m_cameraId: 0;
         m_run: false;
+        m_isIPCrtsp: m_rtspAddress != "";
+        m_rtspAddress: rtspAddress.text;
     }
 
     OpenCVshowFrame {
         anchors {left: parent.left; top: parent.top;}
         id: opencvShowFrame;
         m_capture: opencvCamera;
-        m_frameRate: 33;
+        m_frameRate: 60;
         m_run: true;
         width: 640;
         height: 380;
@@ -56,11 +58,21 @@ ApplicationWindow {
         }
     }
 
+    TextField {
+        id: rtspAddress;
+        anchors.left: parent.left;
+        anchors.top: opencvShowFrame.bottom;
+        anchors.topMargin: 3;
+        width: parent.width;
+        height: 30;
+        anchors.leftMargin: 0;
+    }
+
     Label {
         id: label;
         anchors.left: parent.left;
         anchors.top: opencvShowFrame.bottom;
-        anchors.topMargin: 10;
+        anchors.topMargin: 40;
         text: qsTr("");
     }
 

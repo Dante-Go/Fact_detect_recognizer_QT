@@ -56,7 +56,7 @@ void OpenCVfaceDetectAction::action(cv::Mat &imgIn, cv::Mat *&imgOut)
   m_cascade->detectMultiScale(small_img, faces, 1.1, 2,
                               0|CV_HAAR_SCALE_IMAGE, cvSize(50, 50));
   t = (double)cvGetTickCount() - t;
-//  qDebug() <<"detecion time = " << t / ((double)cvGetTickFrequency()*1000.) << "ms";
+  qDebug() <<"detection time = " << t / ((double)cvGetTickFrequency()*1000.) << "ms";
 
   for(std::vector<Rect>::const_iterator r = faces.begin(); r != faces.end(); r++)
     {
